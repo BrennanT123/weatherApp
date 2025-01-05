@@ -1,5 +1,5 @@
 import "./styles.css";
-import { format} from 'date-fns'
+import { format } from "date-fns";
 
 class weather {
   constructor(VCData) {
@@ -9,7 +9,7 @@ class weather {
     this.todayMin = VCData.days[0].tempmin;
     this.todayMax = VCData.days[0].tempmax;
     this.currentConditions = VCData.currentConditions.conditions;
-    this.currentTime = format(new Date(),"eeee MMMM wo yyyy")
+    this.currentTime = format(new Date(), "eeee MMMM wo yyyy");
     if (VCData.alerts[0].event) {
       this.currentAlertEvent = VCData.alerts[0].event;
       this.currentAlertHeadline = VCData.alerts[0].headline;
@@ -33,11 +33,28 @@ class htmlElements {
   }
 }
 
-async function getWeather() {
+const options = {
+  enableHighAccuracy: true,
+  timeout: 5000,
+  maximumAge: 0,
+};
+
+navigator.geolocation.getCurrentPosition(success, error, options);
+
+function success(pos) {
+  const crd = pos.coords;
+  console.log('Location');
+  console.log(crd);
+}
+function error(err) {
+  console.warn(`ERROR(${err.code}): ${err.message}`);
+}
+
+async function getWeather(location) {
   let response;
   try {
     response = await fetch(
-      "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/london?key=WHNRUC5T552WXSR65F5SSW8KD",
+      "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/"+location+"?key=WHNRUC5T552WXSR65F5SSW8KD",
       { mode: "cors" }
     );
     //test for forcing it to fail
@@ -59,13 +76,39 @@ function setWeather(VCPromise) {
   const htmlElementsSelection = new htmlElements();
   htmlElementsSelection.location.textContent = weatherInput.address;
   htmlElementsSelection.time.textContent = weatherInput.currentTime;
-  htmlElementsSelection.currentConditions.textContent = weatherInput.currentConditions;
-  htmlElementsSelection.temp.textContent = weatherInput.currentTemp+'°F';
-  htmlElementsSelection.feelsLike.textContent = 'Feels Like: '+weatherInput.currentFeelsLike+'°F';
-  htmlElementsSelection.minmax.textContent = 'Min: '+ weatherInput.todayMin+'°F'+'\n Max: '+weatherInput.todayMax+'°F'; 
+  htmlElementsSelection.currentConditions.textContent =
+    weatherInput.currentConditions;
+  htmlElementsSelection.temp.textContent = weatherInput.currentTemp + "°F";
+  htmlElementsSelection.feelsLike.textContent =
+    "Feels Like: " + weatherInput.currentFeelsLike + "°F";
+  htmlElementsSelection.minmax.textContent =
+    "Min: " +
+    weatherInput.todayMin +
+    "°F" +
+    "\n Max: " +
+    weatherInput.todayMax +
+    "°F";
+  htmlElementsSelection.alertEvent.textContent = weatherInput.currentAlertEvent;
+  htmlElementsSelection.alertEndTime.textContent =
+    weatherInput.currentAlertEndintime.split("T")[0] +
+    " at " +
+    weatherInput.currentAlertEndintime.split("T")[1];
+  htmlElementsSelection.alertHeadline.textContent =
+    weatherInput.currentAlertHeadline;
 
   console.log("weatherdata");
   console.log(weatherInput);
 }
 
-getWeather();
+function searchSetup()
+{
+    const search = document.querySelector('#search');
+    const searchButton = document.querySelector('#searchButton');
+    
+    searchButton.addEventListener('click',()=>getWeather(search.value));
+
+
+}
+
+searchSetup();
+getWeather("london");

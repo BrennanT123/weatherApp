@@ -18,16 +18,10 @@ body {
 #weatherContainer {
   display: flex;
   flex-direction: column;
-  height: 75vh;
   min-width: 800px;
 }
-#weatherContainer div:not(:first-child) {
+#weatherContainer > div {
   flex-grow: 1;
-  border: 0.1rem;
-  border-color: black;
-  border-style: solid;
-  border-radius: 2rem;
-  background-color: var(--box-color);
 }
 
 #search {
@@ -39,12 +33,13 @@ body {
   border-style: none;
   height: 2rem;
   padding-left: 4rem;
-  min-width: 800px;
+  
 }
 
 #searchContainer {
   display: flex;
   position: relative;
+  min-width: 800px;
 }
 #searchContainer::before {
   content: url("./imgs/magnify.svg");
@@ -62,11 +57,11 @@ body {
 }
 
 #currentWeatherContainer {
-  height: 25vh;
+  height: min-content;
   display: flex;
   flex-grow: 1;
 }
-#currentWeatherContainer *{
+#currentWeatherContainer > div{
   width: 20%;
   flex-grow: 1;
 
@@ -77,19 +72,61 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  border-color: black;
+  border-style: solid;
+  border-radius: 2rem;
+  background-color: var(--box-color);
+  border-width: 3px;
+  padding: 1rem;
+  max-height: 150px;
 }
-#currentWeatherContainer *:not(pre){
-    border: 0.1rem;
+
+
+
+#searchContainer button{
+    height: 1.5rem;
+    align-self: center;
+    border-radius: 1rem;
+    outline: none;
+    border: none;
+    background-color: var(--box-color);
+    font-family: "Itim",serif;;
+}
+
+#searchContainer button:hover 
+{
+    outline: 3px solid;
+    outline-color: black;
+    
+}
+
+#alertInfo
+{
+    display: grid;
+    grid-template-rows: 3rem auto;
+    grid-template-columns: 1fr 1fr;
+}
+#alertInfo > div{
+    width: 100%;
+    flex-grow: 1;
+    color: var(--font-color);
+    font-weight: bold;
+    font-size: 1.5rem;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border-color: black;
     border-style: solid;
     border-radius: 2rem;
-    padding: 1rem;
-}
-
-#location
-{
-
     background-color: var(--box-color);
-
-
+    border-width: 3px;
+    padding: 1rem;
+    max-height: 150px;
+    box-sizing: border-box;
+}
+#alertHeadline
+{
+    grid-area: -1/1/-1/3;
+    
 }
